@@ -2911,17 +2911,6 @@
       ]
    },
    {
-      "name":"Text",
-      "type":"prose",
-      "extensions":[
-         ".txt",
-         ".fr",
-         ".nb",
-         ".ncl",
-         ".no"
-      ]
-   },
-   {
       "name":"Textile",
       "type":"prose",
       "extensions":[

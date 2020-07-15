@@ -80,16 +80,13 @@ function list_file_types(files){
     let percentage_top = [];
 
     for(let i=0; i < top_four.length; i++){
-        console.log(sum);
-        console.log(top_four[i]);
         let value = top_four[i][1];
         let language = top_four[i][0];
         let percentage = value/sum;
 
         percentage_top.push([language, percentage])
     }
-    console.log(percentage_top);
-    return language_counts;
+    return percentage_top;
 
 }
 
