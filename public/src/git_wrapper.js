@@ -12,7 +12,7 @@ async function get_repos(username){
 }
 
 async function get_files_in_repo(repo, username){
-    //Todo: list all the files in a given repo
+    //Todo: Take size of file into account
     let files = await axios.get(git_root+"/repos/"+username+"/"+repo.name+"/git/trees/master?recursive=1");
     return files;
 
@@ -21,19 +21,38 @@ async function get_files_in_repo(repo, username){
 function list_file_types(files){
     let file_types = [];
     while( files.length > 0) {
-        let file_type = files.pop().split(".");
+        let file = files.pop();
+        let file_type = "";
+        let file_size = 0;
+        for( let key in file){
+
+            if(file[key] === undefined){
+                continue
+            }
+
+            file_type = key.split(".")
+            file_size = file[key]
+        }
         if (file_type.length > 1){
-            file_types.push(file_type[1]);
+            let type_key = file_type[1];
+            let obj = {};
+            obj[type_key] = file_size;
+            file_types.push(obj);
         }
     }
     var counts = {};
     for (let i = 0; i < file_types.length; i++) {
-        counts[file_types[i]] = 1 + (counts[file_types[i]] || 0);
+        let file_size = 0;
+        let file_key = "";
+        for (let key in file_types[i] ) {
+            file_size = file_types[i][key];
+            file_key = key;
+        }
+        counts[file_key] = file_size + (counts[file_key] || 0);
     }
     let language_counts = [];
 
     // Loop through all the different file extensions
-    console.log(counts.length);
     for(let key in counts){
         if (!counts.hasOwnProperty(key)) {
             continue
@@ -61,7 +80,6 @@ function list_file_types(files){
     let top_four = [];
     let sum = 0;
     let counter = 0;
-    console.log(language_counts.length);
     while(counter < 4){
         let max_index = 0;
         for(let y = 0; y < language_counts.length; y++){
@@ -82,7 +100,7 @@ function list_file_types(files){
     for(let i=0; i < top_four.length; i++){
         let value = top_four[i][1];
         let language = top_four[i][0];
-        let percentage = value/sum;
+        let percentage = Math.round(value*100/sum);
 
         percentage_top.push([language, percentage])
     }
@@ -100,7 +118,13 @@ export async function build_language_percentages(username){
         let repo_data = await get_files_in_repo(repo, username);
         let file_data = repo_data.data.tree;
 
-        file_data.map(file => all_files.push(file.path));
+        file_data.map(file => {
+            let path = file.path;
+            let size = file.size;
+            let object = {};
+            object[path] = size;
+            all_files.push(object)
+        });
     }
     return list_file_types(all_files);
 }

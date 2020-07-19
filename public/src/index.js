@@ -7,7 +7,7 @@ import {build_language_percentages} from "./git_wrapper.js"
 
 const history = createBrowserHistory();
 
-class CodeBar extends Component{
+export class CodeBar extends Component{
     state = {
         colors: ["bg-success", "bg-info", "bg-warning", "bg-danger"]
     };
@@ -20,11 +20,9 @@ class CodeBar extends Component{
                 let with_colors = []
                 for(let i = 0; i < percentages.length; i++){
                     let values = percentages[i];
-                    console.log(values);
                     values.push(this.state.colors[i]);
                     with_colors.push(values);
                 }
-                console.log(with_colors);
                 this.setState({percentages: with_colors});
             })
     }
@@ -32,13 +30,20 @@ class CodeBar extends Component{
     render() {
         if (!this.state.percentages) return null;
         return (
-            <div className="progress" style={{height: "3em", borderRadius: "10px"}}>
-                {
-                    this.state.percentages.map(value => (
-                        <div className={"progress-bar "+value[2]} role={"progressbar"} style={{width: value[1]*100+"%"}}
-                             aria-valuemin={"0"} aria-valuemax={"100"}><h4>{value[0]}</h4></div>
-                    ))
-                }
+            <div>
+                <div className="progress" style={{height: "3em", borderRadius: "10px"}}>
+                    {
+                        this.state.percentages.map(value => (
+                            <div className={"progress-bar "+value[2]} role={"progressbar"} style={{width: value[1]*100+"%"}}
+                                 aria-valuemin={"0"} aria-valuemax={"100"}><h4>{value[0]}: {value[1]}%</h4></div>
+                        ))
+                    }
+                </div>
+                <div>
+                    <p style={{ fontStyle: "italic", fontSize: "10px", borderRadius: "10px"}}>
+                        GitHub Language Bar by Zantiki: built using GitHub API and React
+                    </p>
+                </div>
             </div>
         )
     }

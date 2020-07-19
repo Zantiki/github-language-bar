@@ -2629,13 +2629,6 @@
       ]
    },
    {
-      "name":"SVG",
-      "type":"data",
-      "extensions":[
-         ".svg"
-      ]
-   },
-   {
       "name":"Sage",
       "type":"programming",
       "extensions":[
